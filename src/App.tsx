@@ -1,10 +1,8 @@
+import MainLayout from "./components/layout/MainLayout"
+
 function App() {
 
-  return (
-    <>
-      <h1>PrimeFit Sports</h1>
-    </>
-  )
+  return <MainLayout></MainLayout>
 }
 
 export default App
