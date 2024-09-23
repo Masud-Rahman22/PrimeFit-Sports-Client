@@ -1,19 +1,49 @@
 import { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import LogoutIcon from '@mui/icons-material/Logout';
+import toast, { Toaster } from 'react-hot-toast';
+import Register from './Register';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { logout, setUser } from '../redux/features/auth/authSlice';
+
+interface LoginForm {
+  email: string;
+  password: string;
+}
+
 
 const Login = () => {
     const [openModal, setOpenModal] = useState(false);
     const [openRegisterModal, setOpenRegisterModal] = useState(false);
-    const menuId = 'primary-search-account-menu';
+    const { register, handleSubmit } = useForm<LoginForm>(); // Specify form type
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+  
+    const onSubmit: SubmitHandler<LoginForm> = ({ email, password }) => {
+      // Dispatch the user data
+      dispatch(setUser({
+        email,
+        password,
+      }));
+  
+      // Show success message
+      toast.success('Welcome! You are logged in');
+  
+      // Navigate to home
+      navigate('/');
+  
+      // Optionally close the modal
+      setOpenModal(false);
+    };
+
+  // const handleLogout = () => {
+  //     dispatch(logout())
+  // }
 
     return (
         <div>
-            {
+            {/* {
                 user ? <button onClick={handleLogout} className='ml-2'>
                     <LogoutIcon />
                 </button>
@@ -29,7 +59,7 @@ const Login = () => {
                     >
                         <AccountCircle />
                     </IconButton>
-            }
+            } */}
             <div onClick={() => setOpenModal(false)} className={`fixed z-[100] flex items-center justify-center ${openModal ? 'opacity-1 visible' : 'invisible opacity-0'} inset-0 h-full w-full bg-black/20 backdrop-blur-sm duration-100`}>
                 <Toaster />
                 <div onClick={(e_) => e_.stopPropagation()} className={`absolute w-full rounded-lg bg-white dark:bg-gray-900 drop-shadow-2xl sm:w-[500px] ${openModal ? 'opacity-1 translate-y-0 duration-300' : '-translate-y-20 opacity-0 duration-150'}`}>
@@ -59,7 +89,6 @@ const Login = () => {
                         {/* here link is to home so further it can be a big problem just for a reminder to change it in future */}
                         <p className='mt-5'>Hey there pal !! you new here ? then hurry up <Link to='/'><button onClick={() => setOpenRegisterModal(true)} className='text-blue-300'>Register</button></Link> now</p>
                         <button className="text-xl w-32 h-14 bg-gray-700 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md mt-5"><span className="absolute bg-black size-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span><span className="absolute bg-black size-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>Login</button>
-                        <button onClick={handleGoogleLogin} className="text-xl w-36 ml-10 h-14 bg-gray-700 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md mt-5"><span className="absolute bg-black size-40 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span><span className="absolute bg-black size-40 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>Google sign in</button>
                     </form>
                     <Register openRegisterModal={openRegisterModal} setOpenRegisterModal={setOpenRegisterModal}></Register>
                 </div>
