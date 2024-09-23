@@ -19,17 +19,42 @@ function Navbar() {
     <Box component="nav">
       <ul className="flex gap-8 text-lg font-semibold">
         <li>
-          <NavLink to="/">Home</NavLink>
+          <NavLink
+            to="/"
+            style={({ isActive }) => ({
+              color: isActive ? "#2b2b2b" : "#2b2b2b",
+              textDecoration: "none",
+            })}
+          >
+            Home
+          </NavLink>
         </li>
         <li>
-          <NavLink to="/products">Products</NavLink>
+          <NavLink
+            to="/products"
+            style={({ isActive }) => ({
+              color: isActive ? "#2b2b2b" : "#2b2b2b",
+              textDecoration: "none",
+            })}
+          >
+            Products
+          </NavLink>
         </li>
         <li>
-          <NavLink to="/aboutus">About Us</NavLink>
+          <NavLink
+            to="/aboutus"
+            style={({ isActive }) => ({
+              color: isActive ? "#2b2b2b" : "#2b2b2b",
+              textDecoration: "none",
+            })}
+          >
+            About Us
+          </NavLink>
         </li>
       </ul>
     </Box>
   );
+  
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null

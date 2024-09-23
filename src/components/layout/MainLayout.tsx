@@ -4,7 +4,7 @@ import Navbar from "../../shared/Navbar";
 
 const MainLayouts = () => {
   return (
-    <div className="overflow-x-hidden max-w-6xl mx-auto">
+    <div className="overflow-x-hidden max-w-full mx-auto">
       <Navbar></Navbar>
       <Outlet></Outlet>
       <Footer></Footer>
