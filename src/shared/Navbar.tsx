@@ -50,7 +50,13 @@ function Navbar() {
         <NavLink to="/" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Home</NavLink>
       </li>
       <li>
-        <NavLink to="/products" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Products</NavLink>
+        <NavLink to="/all-products" style={{ textDecoration: 'none', color: '#2b2b2b' }}>All Products</NavLink>
+      </li>
+      <li>
+        <NavLink to="/manage-products" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Manage Products</NavLink>
+      </li>
+      <li>
+        <NavLink to="/cart" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Cart</NavLink>
       </li>
       <li>
         <NavLink to="/aboutus" style={{ textDecoration: 'none', color: '#2b2b2b' }}>About Us</NavLink>
@@ -70,11 +76,17 @@ function Navbar() {
         color: '#2b2b2b',
       }}
     >
-      <li>
+    <li>
         <NavLink to="/" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Home</NavLink>
       </li>
       <li>
-        <NavLink to="/products" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Products</NavLink>
+        <NavLink to="/all-products" style={{ textDecoration: 'none', color: '#2b2b2b' }}>All Products</NavLink>
+      </li>
+      <li>
+        <NavLink to="/manage-products" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Manage Products</NavLink>
+      </li>
+      <li>
+        <NavLink to="/cart" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Cart</NavLink>
       </li>
       <li>
         <NavLink to="/aboutus" style={{ textDecoration: 'none', color: '#2b2b2b' }}>About Us</NavLink>
