@@ -1,0 +1,44 @@
+
+.navlink {
+    text-decoration: none;
+    color: #2b2b2b;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  
+  .navlink::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0%;
+    height: 2px;
+    background-color: #2b2b2b;
+    transition: width 0.4s ease;
+  }
+  
+  .navlink:hover::after, .navlink:focus::after, .navlink.active::after {
+    width: 100%; 
+  }
+  
+  .navlink:hover, .navlink:focus, .navlink.active {
+    color: #b1412d; 
+  }
+  
+
+  .navlink:active {
+    transform: scale(0.98); 
+    transition: transform 0.1s ease;
+  }
+  /* Default style for logo */
+.logo {
+    cursor: pointer; /* Change cursor to indicate interaction */
+  }
+  
+  /* On hover or touch, apply scale and rotation */
+  .logo:hover,
+  .logo:active {
+    transform: scale(1.1) rotate(10deg); /* Scale up and slightly rotate */
+  }
+  
+  
