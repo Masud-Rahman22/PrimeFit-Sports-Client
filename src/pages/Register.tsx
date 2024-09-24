@@ -20,10 +20,10 @@ const Register = ({ setOpenRegisterModal, openRegisterModal }:{
             toast.error(error);
         }
     }, [isError, error])
-    
+
     const onSubmit = ({ name, email, password, picture }) => {
         // Email Password signUp
-        dispatch(createUser({
+        dispatch(setUser({
             email,
             password,
             name,
