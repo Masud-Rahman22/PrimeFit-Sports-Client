@@ -1,13 +1,14 @@
 import { useState } from "react";
 import Rating from "react-rating";
 import { IProduct } from "./FeaturedSection";
+import { Link } from "react-router-dom";
 
 interface FeaturedProductsProps {
   product: IProduct;
 }
 
 export default function FeaturedProducts({ product }: FeaturedProductsProps) {
-  const { name, description, category, brand, stock, rating, price, image } = product;
+  const {_id,name, description, category, brand, stock, rating, price, image } = product;
   const [userRating, setUserRating] = useState(rating);
 
   return (
@@ -27,9 +28,9 @@ export default function FeaturedProducts({ product }: FeaturedProductsProps) {
 
         {/* View Details Button */}
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <button className="px-4 py-2 bg-slate-800 text-white text-sm rounded-lg hover:bg-slate-900">
+          <Link to={`/products/${_id}`} className="px-4 py-2 bg-slate-800 text-white text-sm rounded-lg hover:bg-slate-900">
             View Details
-          </button>
+          </Link>
         </div>
       </div>
 

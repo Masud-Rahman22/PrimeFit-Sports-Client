@@ -2,6 +2,7 @@ import { useGetAllProductsQuery } from "../../../redux/features/products/Product
 import FeaturedProducts from "./FeaturedProducts";
 
 export interface IProduct {
+  _id: string,
   name: string;
   description: string;
   category: string;

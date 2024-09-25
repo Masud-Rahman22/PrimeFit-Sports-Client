@@ -6,6 +6,7 @@ import AllProducts from "../pages/AllProducts";
 import Cart from "../pages/Cart";
 import ManageProducts from "../pages/ManageProducts";
 import Home from "../pages/Home";
+import SingleProduct from "../pages/SingleProduct";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,11 @@ const router = createBrowserRouter([
       {
         path: "/manage-products",
         element: <ManageProducts></ManageProducts>
-      }
+      },
+      {
+        path: "/products/:id",
+        element: <SingleProduct></SingleProduct>, 
+      },
     ],
   },
   // {
