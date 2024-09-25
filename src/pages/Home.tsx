@@ -1,12 +1,12 @@
 import Banner from "../components/ui/Banner"
-import FeaturedProducts from "../components/ui/FeaturedProducts"
+import { FeaturedSection } from "../components/ui/featured/FeaturedSection"
 
 
 const Home = () => {
   return (
     <div>
       <Banner></Banner>
-      <FeaturedProducts></FeaturedProducts>
+      <FeaturedSection></FeaturedSection>
     </div>
   )
 }

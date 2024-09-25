@@ -1,82 +1,29 @@
-import React, { useState } from 'react';
-import { Card } from 'antd';
+import { useState } from 'react';
+import Rating from 'react-rating';
+import { IProduct } from './featured/FeaturedSection';
+interface FeaturedProductsProps {
+  product: IProduct;
+}
 
-const tabList = [
-  {
-    key: 'tab1',
-    tab: 'tab1',
-  },
-  {
-    key: 'tab2',
-    tab: 'tab2',
-  },
-];
-
-const contentList: Record<string, React.ReactNode> = {
-  tab1: <p>content1</p>,
-  tab2: <p>content2</p>,
-};
-
-const tabListNoTitle = [
-  {
-    key: 'article',
-    label: 'article',
-  },
-  {
-    key: 'app',
-    label: 'app',
-  },
-  {
-    key: 'project',
-    label: 'project',
-  },
-];
-
-const contentListNoTitle: Record<string, React.ReactNode> = {
-  article: <p>article content</p>,
-  app: <p>app content</p>,
-  project: <p>project content</p>,
-};
-
-const FeaturedProducts: React.FC = () => {
-  const [activeTabKey1, setActiveTabKey1] = useState<string>('tab1');
-  const [activeTabKey2, setActiveTabKey2] = useState<string>('app');
-
-  const onTab1Change = (key: string) => {
-    setActiveTabKey1(key);
-  };
-  const onTab2Change = (key: string) => {
-    setActiveTabKey2(key);
-  };
-
+export default function ProductCard2({ product }: FeaturedProductsProps) {
+  const { name, description, category, brand, stock, rating, price, image } = product;
+  const [userRating, setUserRating] = useState(rating);
   return (
-    <>
-      <Card
-        style={{ width: '100%' }}
-        title="Card title"
-        extra={<a href="#">More</a>}
-        tabList={tabList}
-        activeTabKey={activeTabKey1}
-        onTabChange={onTab1Change}
-      >
-        {contentList[activeTabKey1]}
-      </Card>
-      <br />
-      <br />
-      <Card
-        style={{ width: '100%' }}
-        tabList={tabListNoTitle}
-        activeTabKey={activeTabKey2}
-        tabBarExtraContent={<a href="#">More</a>}
-        onTabChange={onTab2Change}
-        tabProps={{
-          size: 'middle',
-        }}
-      >
-        {contentListNoTitle[activeTabKey2]}
-      </Card>
-    </>
-  );
-};
-
-export default FeaturedProducts;
+      <div className="w-full max-w-[340px] space-y-3 rounded-xl bg-white p-4 dark:bg-[#18181B]">
+          <div className="relative flex h-48 w-full justify-center lg:h-[260px]">
+              
+              <img width={400} height={400} className="rounded-lg bg-black/40 object-cover" src={image} alt="card navigate ui" />
+          </div>
+          <div className="space-y-2">
+              <h3 className="text-sm md:text-base lg:text-3xl text-[#2b2b2b]">{name}</h3>
+              <p className="text-xs font-semibold text-gray-400 md:text-sm">Waterproof Sport HD Monitor for MacBook</p>
+              <p>$20</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-6 text-sm md:text-base">
+              <button className="rounded-lg bg-[#49B2FF] px-4 py-2 font-semibold text-white duration-300 hover:scale-105 hover:bg-sky-600">View Details</button>
+              <button className="rounded-lg bg-gray-400 px-4 py-2 font-semibold text-white duration-300 hover:scale-95 hover:bg-gray-600">Add to Cart</button>
+          </div>
+      </div>
+      );
+  }
+  

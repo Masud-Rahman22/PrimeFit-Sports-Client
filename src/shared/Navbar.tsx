@@ -40,7 +40,7 @@ function Navbar() {
 
   const navlinks = (
     <ul
-      className="flex gap-8 text-lg font-semibold"
+      className="flex gap-x-6 text-lg font-semibold"
       style={{
         listStyle: "none",
         padding: 0,

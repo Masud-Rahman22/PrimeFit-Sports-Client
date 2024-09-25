@@ -3,9 +3,19 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes/Router";
+import { NextUIProvider } from "@nextui-org/react";
+import { Provider } from "react-redux";
+import { persistor, store } from "./redux/features/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+    <NextUIProvider>
+      <RouterProvider router={router} />
+    </NextUIProvider>
+    </PersistGate>
+    </Provider>
   </StrictMode>
 );
