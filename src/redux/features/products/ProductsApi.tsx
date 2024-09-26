@@ -9,8 +9,8 @@ const ProductsApi = baseApi.injectEndpoints({
       }),
     }),
     getSingleProduct: builder.query({
-      query: (id) => ({
-        url: `/products/${id}`,
+      query: (_id) => ({
+        url: `/products/${_id}`,
         method: 'GET',
       }),
     }),
