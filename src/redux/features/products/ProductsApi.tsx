@@ -2,6 +2,7 @@
 import { baseApi } from '../../api/baseApi';
 type Category = string[];
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ProductsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllProducts: builder.query<any, void>({
@@ -16,13 +17,25 @@ const ProductsApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
     }),
-    getAllCategories: builder.query<Category, void>({ 
+    getAllCategories: builder.query<Category, void>({
       query: () => ({
         url: `/products/categories`,
         method: 'GET',
       }),
     }),
+    deleteAProduct: builder.mutation<any, string>({
+      query: (_id) => ({
+        url: `/products/${_id}`,
+        method: 'PATCH',
+        body: { isDeleted: true }
+      }),
+    }),
   }),
 });
 
-export const { useGetAllProductsQuery, useGetSingleProductQuery, useGetAllCategoriesQuery } = ProductsApi;
+export const { 
+  useGetAllProductsQuery, 
+  useGetSingleProductQuery, 
+  useGetAllCategoriesQuery, 
+  useDeleteAProductMutation 
+} = ProductsApi;
