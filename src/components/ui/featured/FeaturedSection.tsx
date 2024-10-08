@@ -2,7 +2,7 @@ import { useGetAllProductsQuery } from "../../../redux/features/products/Product
 import FeaturedProducts from "./FeaturedProducts";
 
 export interface IProduct {
-  _id: string;
+  _id?: string;
   name: string;
   description: string;
   category: string;
@@ -11,8 +11,8 @@ export interface IProduct {
   rating: number;
   price: number;
   image: string;
-  createdAt: string; 
-  isDeleted: boolean;
+  createdAt?: string; 
+  isDeleted?: boolean;
 }
 
 export const FeaturedSection = () => {
