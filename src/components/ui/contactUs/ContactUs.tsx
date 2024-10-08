@@ -22,7 +22,7 @@ const ContactUs: React.FC = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-teal-500 py-16 px-4">
+    <div className="bg-gradient-to-r from-blue-500 to-teal-500 py-16 px-4 my-16">
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg flex flex-col md:flex-row">
         {/* Left Side - Contact Information */}
         <div className="w-full md:w-1/2 p-8 bg-blue-100 rounded-lg">

@@ -12,7 +12,7 @@ export default function FeaturedProducts({ product }: FeaturedProductsProps) {
   const [userRating, setUserRating] = useState(rating);
 
   return (
-    <div className="w-full max-w-md space-y-6 rounded-lg bg-white p-6 dark:bg-[#0000]">
+    <div className="w-full max-w-md flex flex-col justify-center items-center space-y-6 rounded-lg bg-white p-6 dark:bg-[#0000]">
       {/* Image section */}
       <div className="relative group">
         <img

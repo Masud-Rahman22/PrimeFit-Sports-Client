@@ -45,8 +45,7 @@ export const FeaturedSection = () => {
     .slice(0, 4);
 
   return (
-    <div>
-      <h2 className="">Recent Products</h2>
+    <div className="mt-16">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {recentProducts?.map((product: IProduct) => (
           <FeaturedProducts key={product._id} product={product} />
