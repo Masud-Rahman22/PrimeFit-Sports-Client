@@ -33,8 +33,9 @@ const ProductDisplayPage: React.FC = () => {
       if (data?.data) {
         setFilteredProducts(data.data);
         // Extract unique categories from products
-        const uniqueCategories = Array.from(new Set(data.data.map((product: IProduct) => product.category)));
-        const uniqueBrands = Array.from(new Set(data.data.map((product: IProduct) => product.brand)));
+        const products = data.data as IProduct[];
+        const uniqueCategories: string[] = Array.from(new Set(products.map((product) => product.category)));
+        const uniqueBrands: string[] = Array.from(new Set(products.map((product) => product.brand)));
         setCategories(uniqueCategories); // Set unique categories
         setBrands(uniqueBrands); // Set unique categories
       }
@@ -54,7 +55,7 @@ const ProductDisplayPage: React.FC = () => {
       ) || [];
 
     // Sort products based on sortOrder
-    filtered.sort((a, b) =>
+    filtered.sort((a: { price: number; }, b: { price: number; }) =>
       sortOrder === "asc" ? a.price - b.price : b.price - a.price
     );
 
@@ -85,7 +86,20 @@ const ProductDisplayPage: React.FC = () => {
   };
 
   if (isLoading) return <div>Loading products...</div>;
-  if (error) return <div>Error loading products: {error?.message}</div>;
+  if (error) {
+    // Assuming error could be FetchBaseQueryError or SerializedError
+    let errorMessage: string;
+  
+    // If you are confident about the structure, you can use assertion
+    if ('status' in error) {
+      errorMessage = (error as { data: { message?: string } }).data?.message || "Failed to fetch data.";
+    } else {
+      errorMessage = (error as { message: string }).message || "An unknown error occurred.";
+    }
+  
+    return <div>Error loading products: {errorMessage}</div>;
+  }
+  
 
   return (
     <div className="container mx-auto p-4">
