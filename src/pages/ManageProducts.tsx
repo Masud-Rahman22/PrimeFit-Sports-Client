@@ -2,18 +2,15 @@ import { useState } from "react";
 import {
   useGetAllProductsQuery,
   useDeleteAProductMutation,
+  useCreateProductMutation, // Import createProduct mutation
 } from "../redux/features/products/ProductsApi";
 import { IProduct } from "../components/ui/featured/FeaturedSection";
 import Modal from "../utils/Model";
 
 const ManageProducts = () => {
-  const {
-    data: products,
-    error,
-    isLoading,
-    refetch,
-  } = useGetAllProductsQuery();
+  const { data: products, error, isLoading, refetch } = useGetAllProductsQuery();
   const [deleteAProduct] = useDeleteAProductMutation();
+  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation(); // Add createProduct mutation
   const [isFormOpen, setIsFormOpen] = useState(false); // Form visibility state
   const [newProduct, setNewProduct] = useState<IProduct>({
     name: "",
@@ -44,18 +41,23 @@ const ManageProducts = () => {
     (product: IProduct) => !product.isDeleted
   );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Dispatch action to create a product
-    console.log("New product:", newProduct);
-    // Close form after submission
-    setIsFormOpen(false);
-    refetch(); // Optionally refetch products after adding
+    
+    try {
+      await createProduct(newProduct).unwrap();
+      console.log("New product created:", newProduct);
+      setIsFormOpen(false);
+      refetch();
+    } catch (error: any) {
+      console.error("Failed to create product:", error.data?.message || "Unknown error");
+    }
   };
+  
 
   return (
     <div className="container mx-auto p-4">
@@ -191,7 +193,7 @@ const ManageProducts = () => {
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600 transition duration-300 w-full"
           >
-            Submit
+            {isCreating ? 'Creating...' : 'Submit'}
           </button>
         </form>
       </Modal>
@@ -236,20 +238,14 @@ const ManageProducts = () => {
                   {product.stock}
                 </td>
                 <td className="border border-gray-200 px-4 py-2">
-                  ${product.price.toFixed(2)}
+                  {product.price}
                 </td>
                 <td className="border border-gray-200 px-4 py-2">
                   <button
-                    onClick={() => console.log("Update")}
-                    className="bg-green-400 text-white py-1 px-2 rounded mr-2"
-                  >
-                    ✏️
-                  </button>
-                  <button
+                    className="bg-red-500 text-white py-1 px-2 rounded-md"
                     onClick={() => handleDeleteProduct(product._id)}
-                    className="bg-red-500 text-white py-1 px-2 rounded"
                   >
-                    🗑️
+                    Delete
                   </button>
                 </td>
               </tr>
