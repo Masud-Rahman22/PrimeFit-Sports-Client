@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
+import Swal from "sweetalert2";
 import {
   useGetAllProductsQuery,
   useDeleteAProductMutation,
@@ -8,7 +10,12 @@ import { IProduct } from "../components/ui/featured/FeaturedSection";
 import Modal from "../utils/Model";
 
 const ManageProducts = () => {
-  const { data: products, error, isLoading, refetch } = useGetAllProductsQuery();
+  const {
+    data: products,
+    error,
+    isLoading,
+    refetch,
+  } = useGetAllProductsQuery();
   const [deleteAProduct] = useDeleteAProductMutation();
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation(); // Add createProduct mutation
   const [isFormOpen, setIsFormOpen] = useState(false); // Form visibility state
@@ -21,19 +28,48 @@ const ManageProducts = () => {
     rating: 0,
     price: 0,
     image: "",
+    isDeleted: false,
   });
+  
+
+  const handleUpdateProduct = async (productId: string | undefined) => {
+    console.log(productId);
+  };
 
   const handleDeleteProduct = async (productId: string | undefined) => {
     if (!productId) {
       console.error("Product ID is undefined");
       return;
     }
-    try {
-      await deleteAProduct(productId).unwrap();
-      console.log(`Product with ID ${productId} marked as deleted.`);
-      refetch();
-    } catch (error) {
-      console.error("Failed to delete product:", error);
+
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteAProduct(productId).unwrap();
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your product has been deleted.",
+          icon: "success",
+        });
+        console.log(`Product with ID ${productId} marked as deleted.`);
+        refetch();
+      } catch (error) {
+        console.error("Failed to delete product:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to delete the product.",
+          icon: "error",
+        });
+      }
     }
   };
 
@@ -41,23 +77,28 @@ const ManageProducts = () => {
     (product: IProduct) => !product.isDeleted
   );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
+      console.log(newProduct)
       await createProduct(newProduct).unwrap();
       console.log("New product created:", newProduct);
       setIsFormOpen(false);
       refetch();
     } catch (error: any) {
-      console.error("Failed to create product:", error.data?.message || "Unknown error");
+      console.error(
+        "Failed to create product:",
+        error.data?.message || "Unknown error"
+      );
     }
   };
-  
 
   return (
     <div className="container mx-auto p-4">
@@ -193,7 +234,7 @@ const ManageProducts = () => {
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600 transition duration-300 w-full"
           >
-            {isCreating ? 'Creating...' : 'Submit'}
+            {isCreating ? "Creating..." : "Submit"}
           </button>
         </form>
       </Modal>
@@ -242,10 +283,16 @@ const ManageProducts = () => {
                 </td>
                 <td className="border border-gray-200 px-4 py-2">
                   <button
-                    className="bg-red-500 text-white py-1 px-2 rounded-md"
+                    className="bg-green-400 text-white py-1 px-2 rounded mr-2"
+                    onClick={() => handleUpdateProduct(product._id)}
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    className="bg-red-500 text-white py-1 px-2 rounded"
                     onClick={() => handleDeleteProduct(product._id)}
                   >
-                    Delete
+                    🗑️
                   </button>
                 </td>
               </tr>
