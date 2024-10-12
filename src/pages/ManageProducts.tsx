@@ -5,19 +5,26 @@ import {
   useGetAllProductsQuery,
   useDeleteAProductMutation,
   useCreateProductMutation,
-  useUpdateProductMutation, // Import update mutation
+  useUpdateProductMutation,
 } from "../redux/features/products/ProductsApi";
 import { IProduct } from "../components/ui/featured/FeaturedSection";
 import Modal from "../utils/Model";
 
 const ManageProducts = () => {
-  const { data: products, error, isLoading, refetch } = useGetAllProductsQuery();
+  const {
+    data: products,
+    error,
+    isLoading,
+    refetch,
+  } = useGetAllProductsQuery();
   const [deleteAProduct] = useDeleteAProductMutation();
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
-  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation(); // Add updateProduct mutation
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // Track if we're editing a product
-  const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined); // Track selected product ID
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<
+    string | undefined
+  >(undefined);
   const [newProduct, setNewProduct] = useState<IProduct>({
     name: "",
     description: "",
@@ -48,13 +55,22 @@ const ManageProducts = () => {
 
     if (result.isConfirmed) {
       try {
-        await deleteAProduct(productId).unwrap();
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your product has been deleted.",
-          icon: "success",
-        });
-        refetch();
+        const response = await deleteAProduct(productId).unwrap();
+        if (response.success) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your product has been deleted.",
+            icon: "success",
+          });
+          refetch();
+        } else {
+          console.error("Failed to delete product:", response.error);
+          Swal.fire({
+            title: "Error!",
+            text: response.error || "Failed to delete the product.",
+            icon: "error",
+          });
+        }
       } catch (error) {
         console.error("Failed to delete product:", error);
         Swal.fire({
@@ -71,32 +87,46 @@ const ManageProducts = () => {
   ) => {
     setNewProduct({
       ...newProduct,
-      [e.target.name]: e.target.name === "stock" || e.target.name === "rating" || e.target.name === "price"
-        ? Number(e.target.value)
-        : e.target.value,
+      [e.target.name]:
+        e.target.name === "stock" ||
+        e.target.name === "rating" ||
+        e.target.name === "price"
+          ? Number(e.target.value)
+          : e.target.value,
     });
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const productData = { ...newProduct, isDeleted: false };
+
     if (isEditing && selectedProductId) {
-      // Updating existing product
       try {
-        await updateProduct({ productId: selectedProductId, updatedProduct: newProduct }).unwrap();
-        Swal.fire("Updated!", "The product has been updated.", "success");
+        await updateProduct({
+          _id: selectedProductId,
+          updatedProduct: productData,
+        }).unwrap();
+        Swal.fire("Updated!", "Product has been updated.", "success");
       } catch (error: any) {
         console.error("Failed to update product:", error);
-        Swal.fire("Error!", error.data?.message || "Failed to update product.", "error");
+        Swal.fire(
+          "Error!",
+          error.data?.message || "Failed to update product.",
+          "error"
+        );
       }
     } else {
-      // Creating new product
       try {
-        await createProduct(newProduct).unwrap();
+        await createProduct(productData).unwrap();
         Swal.fire("Created!", "New product has been added.", "success");
       } catch (error: any) {
         console.error("Failed to create product:", error);
-        Swal.fire("Error!", error.data?.message || "Failed to create product.", "error");
+        Swal.fire(
+          "Error!",
+          error.data?.message || "Failed to create product.",
+          "error"
+        );
       }
     }
 
@@ -108,9 +138,9 @@ const ManageProducts = () => {
 
   const handleUpdateProduct = (product: IProduct) => {
     setSelectedProductId(product._id);
-    setNewProduct(product); // Prefill form with selected product's details
-    setIsEditing(true); // Set editing mode
-    setIsFormOpen(true); // Open modal
+    setNewProduct(product);
+    setIsEditing(true);
+    setIsFormOpen(true);
   };
 
   const filteredProducts = products?.data?.filter(
@@ -124,7 +154,7 @@ const ManageProducts = () => {
         <button
           onClick={() => {
             setIsFormOpen(true);
-            setIsEditing(false); // Reset editing state when adding a new product
+            setIsEditing(false);
             setNewProduct({
               name: "",
               description: "",
@@ -161,7 +191,6 @@ const ManageProducts = () => {
             />
           </div>
 
-          {/* Category and Brand */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col">
               <input
@@ -187,7 +216,6 @@ const ManageProducts = () => {
             </div>
           </div>
 
-          {/* Description */}
           <div className="flex flex-col">
             <textarea
               name="description"
@@ -200,7 +228,6 @@ const ManageProducts = () => {
             />
           </div>
 
-          {/* Stock, Rating, Price */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex flex-col">
               <input
@@ -243,7 +270,6 @@ const ManageProducts = () => {
             </div>
           </div>
 
-          {/* Image */}
           <div className="flex flex-col">
             <input
               type="text"
@@ -260,7 +286,11 @@ const ManageProducts = () => {
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded-md"
           >
-            {isCreating || isUpdating ? "Saving..." : isEditing ? "Update Product" : "Submit"}
+            {isCreating || isUpdating
+              ? "Saving..."
+              : isEditing
+              ? "Update Product"
+              : "Submit"}
           </button>
         </form>
       </Modal>
@@ -271,9 +301,10 @@ const ManageProducts = () => {
       ) : error ? (
         <p>Failed to load products</p>
       ) : (
-        <table className="min-w-full table-auto border-collapse border border-gray-200">
-          <thead>
+        <table className="min-w-full table-auto border-collapse border border-gray-200 mt-4">
+          <thead className="bg-gray-100">
             <tr>
+              <th className="border p-2">Image</th>
               <th className="border p-2">Name</th>
               <th className="border p-2">Category</th>
               <th className="border p-2">Brand</th>
@@ -285,25 +316,32 @@ const ManageProducts = () => {
           </thead>
           <tbody>
             {filteredProducts?.map((product: IProduct) => (
-              <tr key={product._id}>
+              <tr key={product._id} className="hover:bg-gray-50">
+                <td className="border p-2">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-16 w-16 object-cover"
+                  />
+                </td>
                 <td className="border p-2">{product.name}</td>
                 <td className="border p-2">{product.category}</td>
                 <td className="border p-2">{product.brand}</td>
                 <td className="border p-2">{product.stock}</td>
                 <td className="border p-2">{product.rating}</td>
-                <td className="border p-2">{product.price}</td>
-                <td className="border p-2 space-x-2">
+                <td className="border p-2">${product.price.toFixed(2)}</td>
+                <td className="border p-2">
                   <button
                     onClick={() => handleUpdateProduct(product)}
-                    className="bg-green-500 text-white py-1 px-2 rounded-md"
+                    className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
                   >
-                    Update
+                    ✏️
                   </button>
                   <button
                     onClick={() => handleDeleteProduct(product._id)}
-                    className="bg-red-500 text-white py-1 px-2 rounded-md"
+                    className="bg-red-500 text-white py-1 px-2 rounded"
                   >
-                    Delete
+                    🗑️
                   </button>
                 </td>
               </tr>
