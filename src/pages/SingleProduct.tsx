@@ -1,15 +1,42 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetSingleProductQuery } from "../redux/features/products/ProductsApi";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import Rating from "react-rating";
 import "react-photo-view/dist/react-photo-view.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { useAddToCartMutation } from "../redux/features/cart/CartApi";
 
 const SingleProduct = () => {
-  const { id } = useParams();
-  const { data, error, isLoading } = useGetSingleProductQuery(id);
+  const { id } = useParams<{ id: string }>();
+  const { data, error, isLoading } = useGetSingleProductQuery(id as string);
   const product = data?.data;
+
+  const [addToCart] = useAddToCartMutation();
+
+  const handleAddToCart = async () => {
+    if (product) {
+      try {
+        await addToCart({ productId: product._id, quantity: 1 }).unwrap();
+        
+        // Show success alert using SweetAlert2
+        Swal.fire({
+          icon: "success",
+          title: "Added to Cart!",
+          text: `${product.name} has been added to your cart.`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } catch (error) {
+        console.error('Failed to add product to cart:', error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to add product to cart.",
+        });
+      }
+    }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -55,7 +82,7 @@ const SingleProduct = () => {
             </div>
           </div>
 
-          <button className="mt-auto bg-[#2b2b2b] text-white text-lg px-6 py-3 rounded-lg hover:bg-zinc-500 transition">
+          <button onClick={handleAddToCart} className="bg-[#2b2b2b] text-white text-lg px-6 py-3 rounded-lg hover:bg-zinc-500 transition lg:mb-24">
             Add to Cart
           </button>
         </div>

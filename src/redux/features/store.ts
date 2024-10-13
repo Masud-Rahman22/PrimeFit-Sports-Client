@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../features/auth/authSlice'
+import authReducer from '../features/auth/authSlice';
+import cartReducer from '../features/cart/cartSlice'; // Import your cart reducer here
 import {
   persistReducer,
   persistStore,
@@ -24,6 +25,7 @@ export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
+    cart: cartReducer, // Add your cart reducer here
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({
@@ -35,7 +37,6 @@ export const store = configureStore({
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
 
 export const persistor = persistStore(store);
