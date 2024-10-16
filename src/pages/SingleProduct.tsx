@@ -9,16 +9,20 @@ import { useAddToCartMutation } from "../redux/features/cart/CartApi";
 import { IProduct } from "../components/ui/featured/FeaturedSection";
 export type IProductWithoutTimestamps = Omit<IProduct, 'createdAt' | 'updatedAt' | '__v'>;
 
+export interface ICartProduct extends IProductWithoutTimestamps {
+  productId: string;
+}
+
 interface AddToCartArgs {
-  product: IProductWithoutTimestamps;
+  product: ICartProduct;
 }
 
 const SingleProduct = () => {
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading } = useGetSingleProductQuery(id as string);
-  const product: IProductWithoutTimestamps | undefined = data?.data 
+  const product: ICartProduct | undefined = data?.data 
   ? {
-      _id: data.data._id,
+      productId: data?.data?._id,
       name: data.data.name,
       brand: data.data.brand,
       category: data.data.category,
@@ -30,7 +34,7 @@ const SingleProduct = () => {
       isDeleted: data.data.isDeleted,
     }
   : undefined;
-  console.log(product)
+  console.log(product)  
 
   const [addToCart] = useAddToCartMutation();
 
@@ -38,8 +42,6 @@ const SingleProduct = () => {
     if (product) {
       try {
         await addToCart({ product } as AddToCartArgs).unwrap();
-        
-        // Show success alert using SweetAlert2
         Swal.fire({
           icon: "success",
           title: "Added to Cart!",
