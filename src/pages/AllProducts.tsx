@@ -9,7 +9,7 @@ interface IProduct {
   category: string;
   brand: string;
   stock: number;
-  rating: number; // Assuming rating is a number
+  rating: number;
   price: number;
   image: string;
   isDeleted: boolean;

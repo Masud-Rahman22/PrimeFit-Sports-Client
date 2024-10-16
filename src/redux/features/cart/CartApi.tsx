@@ -1,27 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { IProductWithoutTimestamps } from "../../../pages/SingleProduct";
 import { baseApi } from "../../api/baseApi";
 
 const CartApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-      addToCart: builder.mutation<any, { productId: string; quantity: number }>({
-        query: ({ productId, quantity }) => ({
-          url: `/cart`,
+      addToCart: builder.mutation<any, { product: IProductWithoutTimestamps }>({
+        query: ({ product }) => ({
+          url: `/products/cart`,
           method: 'POST',
           body: {
-            productId,
-            quantity,
+            product,
           },
         }),
       }),
       getCart: builder.query<any, void>({
         query: () => ({
-          url: `/cart`,
+          url: `/products/cart`,
           method: 'GET',
         }),
       }),
       removeFromCart: builder.mutation<any, string>({
         query: (productId) => ({
-          url: `/cart/${productId}`,
+          url: `/products/cart/${productId}`,
           method: 'DELETE',
         }),
       }),

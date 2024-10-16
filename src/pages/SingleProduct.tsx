@@ -6,18 +6,38 @@ import "react-photo-view/dist/react-photo-view.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useAddToCartMutation } from "../redux/features/cart/CartApi";
+import { IProduct } from "../components/ui/featured/FeaturedSection";
+export type IProductWithoutTimestamps = Omit<IProduct, 'createdAt' | 'updatedAt' | '__v'>;
+
+interface AddToCartArgs {
+  product: IProductWithoutTimestamps;
+}
 
 const SingleProduct = () => {
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading } = useGetSingleProductQuery(id as string);
-  const product = data?.data;
+  const product: IProductWithoutTimestamps | undefined = data?.data 
+  ? {
+      _id: data.data._id,
+      name: data.data.name,
+      brand: data.data.brand,
+      category: data.data.category,
+      description: data.data.description,
+      price: data.data.price,
+      rating: data.data.rating,
+      stock: data.data.stock,
+      image: data.data.image,
+      isDeleted: data.data.isDeleted,
+    }
+  : undefined;
+  console.log(product)
 
   const [addToCart] = useAddToCartMutation();
 
   const handleAddToCart = async () => {
     if (product) {
       try {
-        await addToCart({ productId: product._id, quantity: 1 }).unwrap();
+        await addToCart({ product } as AddToCartArgs).unwrap();
         
         // Show success alert using SweetAlert2
         Swal.fire({
