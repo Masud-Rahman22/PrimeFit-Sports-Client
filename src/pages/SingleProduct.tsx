@@ -4,59 +4,56 @@ import { PhotoProvider, PhotoView } from "react-photo-view";
 import Rating from "react-rating";
 import "react-photo-view/dist/react-photo-view.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { addToCart } from "../redux/features/cart/cartSlice";
+import { useAppDispatch } from "../redux/features/hooks";
 import Swal from "sweetalert2";
-import { useAddToCartMutation } from "../redux/features/cart/CartApi";
-import { IProduct } from "../components/ui/featured/FeaturedSection";
-export type IProductWithoutTimestamps = Omit<IProduct, 'createdAt' | 'updatedAt' | '__v'>;
-
-export interface ICartProduct extends IProductWithoutTimestamps {
-  productId: string;
-}
-
-interface AddToCartArgs {
-  product: ICartProduct;
-}
+import { useState, useEffect } from "react";
 
 const SingleProduct = () => {
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading } = useGetSingleProductQuery(id as string);
-  const product: ICartProduct | undefined = data?.data 
-  ? {
-      productId: data?.data?._id,
-      name: data.data.name,
-      brand: data.data.brand,
-      category: data.data.category,
-      description: data.data.description,
-      price: data.data.price,
-      rating: data.data.rating,
-      stock: data.data.stock,
-      image: data.data.image,
-      isDeleted: data.data.isDeleted,
+  const dispatch = useAppDispatch(); // Dispatch for Redux actions
+  const product = data?.data;
+
+  // Local state to manage stock count
+  const [stock, setStock] = useState<number>(0);
+
+  // Set stock initially when the product data is loaded
+  useEffect(() => {
+    if (product?.stock) {
+      setStock(product.stock);
     }
-  : undefined;
-  console.log(product)  
+  }, [product]);
 
-  const [addToCart] = useAddToCartMutation();
+  const handleAddToCart = () => {
+    if (stock > 0) {
+      // Prepare cart item
+      const cartItem = {
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        stock: 1, // Add 1 unit of stock to cart
+        image: product.image,
+      };
+      // Dispatch addToCart action
+      dispatch(addToCart(cartItem));
+      setStock((prevStock) => prevStock - 1); // Reduce stock in local state
 
-  const handleAddToCart = async () => {
-    if (product) {
-      try {
-        await addToCart({ product } as AddToCartArgs).unwrap();
-        Swal.fire({
-          icon: "success",
-          title: "Added to Cart!",
-          text: `${product.name} has been added to your cart.`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      } catch (error) {
-        console.error('Failed to add product to cart:', error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to add product to cart.",
-        });
-      }
+      // SweetAlert for successs
+      Swal.fire({
+        icon: "success",
+        title: "Added to Cart!",
+        text: `${product.name} has been added to your cart.`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      // SweetAlert for out-of-stock error
+      Swal.fire({
+        icon: "error",
+        title: "Out of Stock!",
+        text: "Sorry, this product is currently out of stock.",
+      });
     }
   };
 
@@ -90,7 +87,7 @@ const SingleProduct = () => {
             <p className="text-2xl font-semibold text-[#2b2b2b] mb-4">${product?.price}</p>
             <p className="text-lg text-gray-600 mb-2">Brand: {product?.brand}</p>
             <p className="text-lg text-gray-600 mb-2">Category: {product?.category}</p>
-            <p className="text-lg text-gray-600 mb-2">In Stock: {product?.stock}</p>
+            <p className="text-lg text-gray-600 mb-2">In Stock: {stock}</p> {/* Use local stock state */}
 
             {/* Rating Section */}
             <div className="flex items-center mb-2">
@@ -104,7 +101,10 @@ const SingleProduct = () => {
             </div>
           </div>
 
-          <button onClick={handleAddToCart} className="bg-[#2b2b2b] text-white text-lg px-6 py-3 rounded-lg hover:bg-zinc-500 transition lg:mb-24">
+          <button
+            onClick={handleAddToCart}
+            className="bg-[#2b2b2b] text-white text-lg px-6 py-3 rounded-lg hover:bg-zinc-500 transition lg:mb-24"
+          >
             Add to Cart
           </button>
         </div>
