@@ -13,7 +13,16 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import "./Navbar.css";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [
+  <ul className="flex flex-col items-center text-lg font-semibold mt-4">
+  <li className="mb-2">
+    <MenuItem component={NavLink} to="/login" key="login">
+      Login
+    </MenuItem>
+  </li>
+</ul>
+];
+
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
