@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useGetSingleProductQuery } from "../redux/features/products/ProductsApi";
+import { useGetSingleProductQuery, useUpdateProductMutation } from "../redux/features/products/ProductsApi";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import Rating from "react-rating";
 import "react-photo-view/dist/react-photo-view.css";
@@ -12,10 +12,11 @@ import { useState, useEffect } from "react";
 const SingleProduct = () => {
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading } = useGetSingleProductQuery(id as string);
-  const dispatch = useAppDispatch(); // Dispatch for Redux actions
+  const [updateProduct] = useUpdateProductMutation(); // Use mutation to update product
+  const dispatch = useAppDispatch();
   const product = data?.data;
 
-  // Local state to manage stock count
+  // Local state for stock management
   const [stock, setStock] = useState<number>(0);
 
   // Set stock initially when the product data is loaded
@@ -25,30 +26,48 @@ const SingleProduct = () => {
     }
   }, [product]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (stock > 0) {
-      // Prepare cart item
-      const cartItem = {
-        _id: product._id,
-        name: product.name,
-        price: product.price,
-        stock: 1, // Add 1 unit of stock to cart
-        image: product.image,
-      };
-      // Dispatch addToCart action
-      dispatch(addToCart(cartItem));
-      setStock((prevStock) => prevStock - 1); // Reduce stock in local state
+      try {
+        // Prepare cart item
+        const cartItem = {
+          _id: product._id,
+          name: product.name,
+          price: product.price,
+          stock: 1, // Add 1 unit of stock to cart
+          image: product.image,
+        };
 
-      // SweetAlert for successs
-      Swal.fire({
-        icon: "success",
-        title: "Added to Cart!",
-        text: `${product.name} has been added to your cart.`,
-        showConfirmButton: false,
-        timer: 1500,
-      });
+        // Dispatch addToCart action
+        dispatch(addToCart(cartItem));
+
+        // Reduce stock in the database and update the UI
+        const updatedStock = stock - 1;
+        const updatedProduct = { ...product, stock: updatedStock };
+
+        // Update the stock in the database
+        await updateProduct({ _id: product._id, updatedProduct });
+
+        // Update local state immediately
+        setStock(updatedStock);
+
+        // Show success message
+        Swal.fire({
+          icon: "success",
+          title: "Added to Cart!",
+          text: `${product.name} has been added to your cart.`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error!",
+          text: "Failed to add the product to the cart.",
+        });
+      }
     } else {
-      // SweetAlert for out-of-stock error
       Swal.fire({
         icon: "error",
         title: "Out of Stock!",
@@ -84,11 +103,17 @@ const SingleProduct = () => {
           <div className="mb-5">
             <h2 className="text-4xl font-bold mb-4">{product?.name}</h2>
             <p className="text-lg text-gray-700 mb-5">{product?.description}</p>
-            <p className="text-2xl font-semibold text-[#2b2b2b] mb-4">${product?.price}</p>
-            <p className="text-lg text-gray-600 mb-2">Brand: {product?.brand}</p>
-            <p className="text-lg text-gray-600 mb-2">Category: {product?.category}</p>
-            <p className="text-lg text-gray-600 mb-2">In Stock: {stock}</p> {/* Use local stock state */}
-
+            <p className="text-2xl font-semibold text-[#2b2b2b] mb-4">
+              ${product?.price}
+            </p>
+            <p className="text-lg text-gray-600 mb-2">
+              Brand: {product?.brand}
+            </p>
+            <p className="text-lg text-gray-600 mb-2">
+              Category: {product?.category}
+            </p>
+            <p className="text-lg text-gray-600 mb-2">In Stock: {stock}</p>{" "}
+            {/* Use local stock state */}
             {/* Rating Section */}
             <div className="flex items-center mb-2">
               <span className="text-lg mr-2">Rating: </span>
@@ -103,7 +128,12 @@ const SingleProduct = () => {
 
           <button
             onClick={handleAddToCart}
-            className="bg-[#2b2b2b] text-white text-lg px-6 py-3 rounded-lg hover:bg-zinc-500 transition lg:mb-24"
+            className={`${
+              stock <= 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#2b2b2b] hover:bg-zinc-500"
+            } text-white text-lg px-6 py-3 rounded-lg transition lg:mb-24`}
+            disabled={stock <= 0} // Button disables immediately when stock reaches 0
           >
             Add to Cart
           </button>

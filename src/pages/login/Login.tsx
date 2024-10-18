@@ -1,7 +1,52 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useLoginMutation, useSignUpMutation } from "../../redux/features/auth/authApi";
+import { setUser } from "../../redux/features/auth/authSlice";
+
+type TFormInputs = {
+  name?: string;
+  email: string;
+  password: string;
+  picture?: string; // Picture field as a text field
+};
 
 export default function Login() {
   const [signUp, setSignUp] = useState(false);
+  const dispatch = useDispatch();
+
+  // react-hook-form
+  const { register, handleSubmit, reset } = useForm<TFormInputs>();
+
+  // RTK Query Mutations
+  const [signUpMutation] = useSignUpMutation();
+  const [loginMutation] = useLoginMutation();
+
+  // Sign Up Logic
+  const onSignUpSubmit = async (data: TFormInputs) => {
+    try {
+      console.log(data)
+      const { name, email, password, picture } = data;
+      const response = await signUpMutation({ name, email, password, picture }).unwrap();
+      console.log(response)
+      dispatch(setUser({ user: response.user, token: response.token }));
+      reset(); // Clear form after submission
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
+  };
+
+  // Login Logic
+  const onLoginSubmit = async (data: TFormInputs) => {
+    try {
+      const { email, password } = data;
+      const response = await loginMutation({ email, password }).unwrap();
+      dispatch(setUser({ user: response.user, token: response.token }));
+      reset(); // Clear form after submission
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
@@ -39,6 +84,7 @@ export default function Login() {
                 ? "block h-full opacity-100 duration-300"
                 : "hidden h-0 opacity-0"
             } space-y-4`}
+            onSubmit={handleSubmit(onSignUpSubmit)}
           >
             <h1 className="mb-4 text-center text-xl font-bold uppercase text-gray-700 dark:text-gray-100">
               Sign Up
@@ -48,20 +94,29 @@ export default function Login() {
                 type="text"
                 placeholder="Name"
                 className="block w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                {...register("name", { required: true })}
               />
               <input
                 type="email"
                 placeholder="Email"
                 className="block w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                {...register("email", { required: true })}
               />
               <input
                 type="password"
                 placeholder="Password"
                 className="block w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                {...register("password", { required: true })}
+              />
+              <input
+                type="text"
+                placeholder="Picture URL"
+                className="block w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                {...register("picture")}
               />
             </div>
             <button
-              type="button"
+              type="submit"
               className="w-full rounded-md bg-blue-600 py-2 text-white shadow-lg hover:bg-blue-700"
             >
               Submit
@@ -70,7 +125,7 @@ export default function Login() {
               Already have an account?{" "}
               <button
                 type="button"
-                onClick={() => setSignUp(!signUp)}
+                onClick={() => setSignUp(false)}
                 className="font-semibold text-blue-600 hover:underline dark:text-blue-400"
               >
                 Sign In
@@ -85,6 +140,7 @@ export default function Login() {
                 ? "hidden h-0 opacity-0"
                 : "block h-full opacity-100 duration-300"
             } space-y-4`}
+            onSubmit={handleSubmit(onLoginSubmit)}
           >
             <h1 className="mb-4 text-center text-xl font-bold uppercase text-gray-700 dark:text-gray-100">
               Sign In
@@ -93,11 +149,13 @@ export default function Login() {
               type="email"
               placeholder="Email"
               className="block w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+              {...register("email", { required: true })}
             />
             <input
               type="password"
               placeholder="Password"
               className="block w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+              {...register("password", { required: true })}
             />
             <p className="text-end text-sm text-gray-600 dark:text-gray-400">
               <a href="#" className="hover:underline">
@@ -105,7 +163,7 @@ export default function Login() {
               </a>
             </p>
             <button
-              type="button"
+              type="submit"
               className="w-full rounded-md bg-blue-600 py-2 text-white shadow-lg hover:bg-blue-700"
             >
               Submit
@@ -113,7 +171,7 @@ export default function Login() {
             <p className="text-center text-gray-600 dark:text-gray-300">
               Don&apos;t have an account?{" "}
               <button
-                onClick={() => setSignUp(!signUp)}
+                onClick={() => setSignUp(true)}
                 type="button"
                 className="font-semibold text-blue-600 hover:underline dark:text-blue-400"
               >
