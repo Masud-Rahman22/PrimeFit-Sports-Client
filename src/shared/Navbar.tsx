@@ -16,7 +16,7 @@ import "./Navbar.css";
 const settings = [
   <ul className="flex flex-col items-center text-lg font-semibold mt-4">
   <li className="mb-2">
-    <MenuItem component={NavLink} to="/login" key="login">
+    <MenuItem component={NavLink} to="/register" key="login">
       Login
     </MenuItem>
   </li>
