@@ -5,6 +5,7 @@ import { REHYDRATE } from 'redux-persist';
 // Define your user type
 export type TUser = {
   userId: string;
+  picture: string;
   iat: number;
   exp: number;
 };
@@ -35,9 +36,6 @@ const authSlice = createSlice({
       state.user = user;
       state.token = token;
     },
-    getUser:()=>{
-
-    },
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -53,7 +51,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, logout } = authSlice.actions;
+export const { setUser, logout, getUser } = authSlice.actions;
 export default authSlice.reducer;
 
 export const useCurrentToken = (state: RootState) => state.auth.token;

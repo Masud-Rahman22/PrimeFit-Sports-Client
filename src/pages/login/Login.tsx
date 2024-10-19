@@ -3,6 +3,7 @@ import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { setUser } from "../../redux/features/auth/authSlice";
 import { useAppDispatch } from "../../redux/features/hooks";
 import { TFormInputs } from "./Register";
+import { useLocation, useNavigate } from "react-router-dom";
 interface SignUpProps {
   setSignUp: React.Dispatch<React.SetStateAction<boolean>>;
   signUp: boolean;
@@ -10,6 +11,11 @@ interface SignUpProps {
 const Login = ({setSignUp,signUp}:SignUpProps) => {
     const [loginMutation] = useLoginMutation();
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    // Get the path user was trying to access before being redirected to login
+    const from = location.state?.from?.pathname || "/";
     const { register, handleSubmit, reset } = useForm<TFormInputs>();
     const onLoginSubmit = async (data: TFormInputs) => {
         try {
@@ -19,6 +25,7 @@ const Login = ({setSignUp,signUp}:SignUpProps) => {
           console.log(response)
           dispatch(setUser({ user: response.data, token: response.token }));
           reset(); // Clear form after submission
+          navigate(from, { replace: true });
         } catch (error) {
           console.error("Error logging in:", error);
         }

@@ -4,7 +4,6 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
@@ -12,19 +11,15 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import "./Navbar.css";
-
-const settings = [
-  <ul className="flex flex-col items-center text-lg font-semibold mt-4">
-  <li className="mb-2">
-    <MenuItem component={NavLink} to="/register" key="login">
-      Login
-    </MenuItem>
-  </li>
-</ul>
-];
-
+import { useSelector } from "react-redux";
+import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
+import { useAppDispatch } from "../redux/features/hooks";
 
 function Navbar() {
+  const currentUser = useSelector(selectCurrentUser);
+  const dispatch = useAppDispatch()
+  console.log(currentUser);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -35,6 +30,7 @@ function Navbar() {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -47,6 +43,7 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
+  // Update navlinks for different screen sizes
   const navlinks = (
     <ul
       className="flex gap-x-6 text-lg font-semibold"
@@ -142,6 +139,30 @@ function Navbar() {
     </ul>
   );
 
+  const handleLogout = () => {
+    dispatch(logout());
+    handleCloseUserMenu();
+  };
+
+  // Conditionally render login/logout based on currentUser
+  const settings = currentUser ? (
+    <ul className="flex flex-col items-center text-lg font-semibold mt-4">
+      <li className="mb-2">
+        <MenuItem onClick={handleLogout} key="logout">
+          Logout
+        </MenuItem>
+      </li>
+    </ul>
+  ) : (
+    <ul className="flex flex-col items-center text-lg font-semibold mt-4">
+      <li className="mb-2">
+        <MenuItem component={NavLink} to="/register" key="login">
+          Login
+        </MenuItem>
+      </li>
+    </ul>
+  );
+
   return (
     <AppBar
       position="static"
@@ -209,7 +230,7 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="User Avatar" src={currentUser?.picture} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -228,13 +249,7 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center", color: "#2b2b2b" }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
+              {settings}
             </Menu>
           </Box>
         </Toolbar>
