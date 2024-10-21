@@ -1,0 +1,36 @@
+.user-details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%; /* Ensures the container uses the full width */
+}
+
+.user-details-container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.user-details-container label {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.user-details-container button {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.user-details-container .error-message {
+    color: red;
+    font-size: 12px;
+}
