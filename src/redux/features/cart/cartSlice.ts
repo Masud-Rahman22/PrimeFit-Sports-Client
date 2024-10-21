@@ -32,7 +32,7 @@ const cartSlice = createSlice({
     removeItem: (state, action: PayloadAction<ObjectId>) => {
       state.items = state.items.filter(item => item._id !== action.payload);
     },
-    updateStock: (state, action: PayloadAction<{ id: ObjectId; stock: number }>) => {
+    updateStock: (state, action: PayloadAction<{ id: string; stock: number }>) => {
       const item = state.items.find(item => item._id === action.payload.id);
       if (item) {
         item.stock = action.payload.stock; // Update stock

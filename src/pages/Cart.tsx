@@ -1,12 +1,14 @@
 import { useAppSelector, useAppDispatch } from "../redux/features/hooks";
 import { removeItem, updateStock } from "../redux/features/cart/cartSlice";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
-
+import { useNavigate } from "react-router-dom";
+import { useGetAllProductsQuery } from "../redux/features/products/ProductsApi";
+import { IProduct } from "../components/ui/featured/FeaturedSection";
 const Cart = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
-  const cartItems = useAppSelector((state) => state.cart.items); // Get cart items from Redux
+  const { data: products = [] } = useGetAllProductsQuery();
+  const navigate = useNavigate();
+  const cartItems = useAppSelector((state) => state.cart.items);
 
   const handleRemoveItem = (id: string) => {
     dispatch(removeItem(id));
@@ -19,11 +21,16 @@ const Cart = () => {
     });
   };
 
-  const handleQuantityChange = (id: string, newQuantity: number) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleQuantityChange = (item: any, newQuantity: number) => {
     if (newQuantity > 0) {
-      dispatch(updateStock({ id, stock: newQuantity }));
+      const product = products?.data?.find((product : IProduct) => product.name === item.name); // Find product by name
+      if (product) {
+        const response = dispatch(updateStock({ id: product._id, stock: newQuantity }));
+        console.log(response)
+      }
     } else {
-      handleRemoveItem(id);
+      handleRemoveItem(item._id);
     }
   };
 
@@ -35,12 +42,12 @@ const Cart = () => {
 
   const handleCheckout = () => {
     if (allInStock) {
-      navigate("/checkout"); // Use navigate to redirect to the checkout page
+      navigate("/checkout");
     }
   };
 
   if (cartItems.length === 0) {
-    return <div className="text-center text-2xl mt-10">Your cart is empty.</div>;
+    return <div className="text-center text-2xl mt-10 lg:h-[60vh] ">Your cart is empty.</div>;
   }
 
   return (
@@ -71,13 +78,15 @@ const Cart = () => {
                     <button
                       onClick={() => handleQuantityChange(item._id, item.stock - 1)}
                       className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition"
+                      aria-label={`Decrease quantity of ${item.name}`}
                     >
                       -
                     </button>
                     <span className="px-4 text-lg">{item.stock}</span>
                     <button
-                      onClick={() => handleQuantityChange(item._id, item.stock + 1)}
+                      onClick={() => handleQuantityChange(item, item.stock + 1)}
                       className="bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition"
+                      aria-label={`Increase quantity of ${item.name}`}
                     >
                       +
                     </button>
@@ -88,6 +97,7 @@ const Cart = () => {
                   <button
                     onClick={() => handleRemoveItem(item._id)}
                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                    aria-label={`Remove ${item.name} from cart`}
                   >
                     Remove
                   </button>
@@ -113,9 +123,11 @@ const Cart = () => {
                 ? "bg-blue-500 text-white hover:bg-blue-600"
                 : "bg-gray-400 text-gray-700 cursor-not-allowed"
             }`}
+            aria-label="Proceed to checkout"
           >
             Proceed to Checkout
           </button>
+          {!allInStock && <p className="text-red-500 mt-2">Some items are out of stock. Please update quantities.</p>}
         </div>
       </div>
     </div>
