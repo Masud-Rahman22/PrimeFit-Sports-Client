@@ -1,5 +1,6 @@
 import React from "react";
 import Slider from "react-slick";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { useGetAllProductsQuery } from "../../../redux/features/products/ProductsApi";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -19,7 +20,7 @@ type TProduct = {
 const Categories: React.FC = () => {
   const { data: products, isLoading, error } = useGetAllProductsQuery();
   const productData: TProduct[] = products?.data || [];
-  console.log(products)
+  const navigate = useNavigate(); // Initialize navigate
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading categories.</div>;
@@ -56,14 +57,19 @@ const Categories: React.FC = () => {
     ],
   };
 
+  // Handle category click to redirect
+  const handleCategoryClick = (category: string) => {
+    navigate(`/products?category=${category}`); // Redirect to ProductDisplayPage with category as query param
+  };
+
   return (
     <div className="category-section lg:my-24">
       <h2 className="text-center text-2xl font-bold mb-4">Categories</h2>
       <Slider {...settings}>
         {productData?.map((product: TProduct, idx: number) => (
-          <div key={idx} className="p-4">
+          <div key={idx} className="p-4" onClick={() => handleCategoryClick(product.category)}>
             <div
-              className="category-item text-center relative bg-gray-100 p-6 rounded-lg shadow-lg"
+              className="category-item text-center relative bg-gray-100 p-6 rounded-lg shadow-lg cursor-pointer"
               style={{
                 backgroundImage: `url(${product?.image})`,
                 backgroundSize: 'cover',

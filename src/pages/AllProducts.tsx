@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useGetAllProductsQuery } from "../redux/features/products/ProductsApi";
 import Rating from "react-rating";
+import { useLocation } from "react-router-dom";
 
-interface IProduct {
+export interface IProduct {
   _id: string;
   name: string;
   description: string;
@@ -15,31 +16,33 @@ interface IProduct {
   isDeleted: boolean;
 }
 
-const ProductDisplayPage: React.FC = () => {
+const AllPorducts: React.FC = () => {
   const { data, error, isLoading } = useGetAllProductsQuery(undefined);
-  const [categories, setCategories] = useState<string[]>([]); 
-  const [brands, setBrands] = useState<string[]>([]); 
+  const location = useLocation(); // Use location to capture the query param
+  const queryParams = new URLSearchParams(location.search);
+  const categoryFromQuery = queryParams.get("category"); // Get the category from query param
+
+  const [categories, setCategories] = useState<string[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [sortOrder, setSortOrder] = useState("asc");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryFromQuery || ""); // Initialize with category from query
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(1000);
-  const [minRating, setMinRating] = useState<number>(0); // New state for minimum rating
+  const [minRating, setMinRating] = useState<number>(0);
 
-
-    useEffect(() => {
-      if (data?.data) {
-        setFilteredProducts(data.data);
-        // Extract unique categories from products
-        const products = data.data as IProduct[];
-        const uniqueCategories: string[] = Array.from(new Set(products.map((product) => product.category)));
-        const uniqueBrands: string[] = Array.from(new Set(products.map((product) => product.brand)));
-        setCategories(uniqueCategories); // Set unique categories
-        setBrands(uniqueBrands); // Set unique categories
-      }
-    }, [data]);
+  useEffect(() => {
+    if (data?.data) {
+      setFilteredProducts(data.data);
+      const products = data.data as IProduct[];
+      const uniqueCategories: string[] = Array.from(new Set(products.map((product) => product.category)));
+      const uniqueBrands: string[] = Array.from(new Set(products.map((product) => product.brand)));
+      setCategories(uniqueCategories);
+      setBrands(uniqueBrands);
+    }
+  }, [data]);
 
   useEffect(() => {
     const filtered =
@@ -50,26 +53,16 @@ const ProductDisplayPage: React.FC = () => {
           product.price <= maxPrice &&
           (selectedCategory ? product.category === selectedCategory : true) &&
           (selectedBrand ? product.brand === selectedBrand : true) &&
-          product.rating >= minRating && // Filter based on rating
+          product.rating >= minRating &&
           !product.isDeleted
       ) || [];
 
-    // Sort products based on sortOrder
-    filtered.sort((a: { price: number; }, b: { price: number; }) =>
+    filtered.sort((a: { price: number }, b: { price: number }) =>
       sortOrder === "asc" ? a.price - b.price : b.price - a.price
     );
 
     setFilteredProducts(filtered);
-  }, [
-    data,
-    searchTerm,
-    sortOrder,
-    selectedCategory,
-    selectedBrand,
-    minPrice,
-    maxPrice,
-    minRating,
-  ]);
+  }, [data, searchTerm, sortOrder, selectedCategory, selectedBrand, minPrice, maxPrice, minRating]);
 
   const handleClearFilters = () => {
     setSearchTerm("");
@@ -78,7 +71,7 @@ const ProductDisplayPage: React.FC = () => {
     setMinPrice(0);
     setMaxPrice(1000);
     setSortOrder("asc");
-    setMinRating(0); // Reset rating filter
+    setMinRating(0);
   };
 
   const toggleSortOrder = () => {
@@ -86,19 +79,9 @@ const ProductDisplayPage: React.FC = () => {
   };
 
   if (isLoading) return <div>Loading products...</div>;
-  if (error) {
-    // Assuming error could be FetchBaseQueryError or SerializedError
-    let errorMessage: string;
-  
-    // If you are confident about the structure, you can use assertion
-    if ('status' in error) {
-      errorMessage = (error as { data: { message?: string } }).data?.message || "Failed to fetch data.";
-    } else {
-      errorMessage = (error as { message: string }).message || "An unknown error occurred.";
-    }
-  
-    return <div>Error loading products: {errorMessage}</div>;
-  }
+  if (error) return <div>Error loading products.</div>;
+
+
   
 
   return (
@@ -230,4 +213,4 @@ const ProductDisplayPage: React.FC = () => {
   );
 };
 
-export default ProductDisplayPage;
+export default AllPorducts;
