@@ -18,16 +18,18 @@ export interface IProduct {
 
 const AllPorducts: React.FC = () => {
   const { data, error, isLoading } = useGetAllProductsQuery(undefined);
-  const location = useLocation(); // Use location to capture the query param
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const categoryFromQuery = queryParams.get("category"); // Get the category from query param
+  const categoryFromQuery = queryParams.get("category");
 
   const [categories, setCategories] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [sortOrder, setSortOrder] = useState("asc");
-  const [selectedCategory, setSelectedCategory] = useState<string>(categoryFromQuery || ""); // Initialize with category from query
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    categoryFromQuery || ""
+  ); // Initialize with category from query
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(1000);
@@ -37,8 +39,12 @@ const AllPorducts: React.FC = () => {
     if (data?.data) {
       setFilteredProducts(data.data);
       const products = data.data as IProduct[];
-      const uniqueCategories: string[] = Array.from(new Set(products.map((product) => product.category)));
-      const uniqueBrands: string[] = Array.from(new Set(products.map((product) => product.brand)));
+      const uniqueCategories: string[] = Array.from(
+        new Set(products.map((product) => product.category))
+      );
+      const uniqueBrands: string[] = Array.from(
+        new Set(products.map((product) => product.brand))
+      );
       setCategories(uniqueCategories);
       setBrands(uniqueBrands);
     }
@@ -62,7 +68,16 @@ const AllPorducts: React.FC = () => {
     );
 
     setFilteredProducts(filtered);
-  }, [data, searchTerm, sortOrder, selectedCategory, selectedBrand, minPrice, maxPrice, minRating]);
+  }, [
+    data,
+    searchTerm,
+    sortOrder,
+    selectedCategory,
+    selectedBrand,
+    minPrice,
+    maxPrice,
+    minRating,
+  ]);
 
   const handleClearFilters = () => {
     setSearchTerm("");
@@ -80,9 +95,6 @@ const AllPorducts: React.FC = () => {
 
   if (isLoading) return <div>Loading products...</div>;
   if (error) return <div>Error loading products.</div>;
-
-
-  
 
   return (
     <div className="container mx-auto p-4">
