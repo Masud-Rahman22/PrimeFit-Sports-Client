@@ -59,7 +59,8 @@ const Categories: React.FC = () => {
 
   // Handle category click to redirect
   const handleCategoryClick = (category: string) => {
-    navigate(`/products?category=${category}`); // Redirect to ProductDisplayPage with category as query param
+    console.log(category)
+    navigate(`/products?category=${category}`);
   };
 
   return (
