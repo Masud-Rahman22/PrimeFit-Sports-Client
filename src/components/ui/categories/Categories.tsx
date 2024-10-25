@@ -59,7 +59,7 @@ const Categories: React.FC = () => {
 
   // Handle category click to redirect
   const handleCategoryClick = (category: string) => {
-    navigate(`/products?category=${category}`);
+    navigate(`/all-products?category=${category}`);
   };
 
   return (
