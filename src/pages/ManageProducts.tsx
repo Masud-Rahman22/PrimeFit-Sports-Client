@@ -301,53 +301,63 @@ const ManageProducts = () => {
       ) : error ? (
         <p>Failed to load products</p>
       ) : (
-        <table className="min-w-full table-auto border-collapse border border-gray-200 mt-4">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-2">Image</th>
-              <th className="border p-2">Name</th>
-              <th className="border p-2">Category</th>
-              <th className="border p-2">Brand</th>
-              <th className="border p-2">Stock</th>
-              <th className="border p-2">Rating</th>
-              <th className="border p-2">Price</th>
-              <th className="border p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProducts?.map((product: IProduct) => (
-              <tr key={product._id} className="hover:bg-gray-50">
-                <td className="border p-2">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-16 w-16 object-cover"
-                  />
-                </td>
-                <td className="border p-2">{product.name}</td>
-                <td className="border p-2">{product.category}</td>
-                <td className="border p-2">{product.brand}</td>
-                <td className="border p-2">{product.stock}</td>
-                <td className="border p-2">{product.rating}</td>
-                <td className="border p-2">${product.price.toFixed(2)}</td>
-                <td className="border p-2">
-                  <button
-                    onClick={() => handleUpdateProduct(product)}
-                    className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProduct(product._id)}
-                    className="bg-red-500 text-white py-1 px-2 rounded"
-                  >
-                    🗑️
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto border-collapse border border-gray-200 mt-4">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="border p-2">Image</th>
+                <th className="border p-2">Name</th>
+                <th className="border p-2 hidden sm:table-cell">Category</th>
+                <th className="border p-2 hidden sm:table-cell">Brand</th>
+                <th className="border p-2 hidden md:table-cell">Stock</th>
+                <th className="border p-2 hidden md:table-cell">Rating</th>
+                <th className="border p-2">Price</th>
+                <th className="border p-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredProducts?.map((product: IProduct) => (
+                <tr key={product._id} className="hover:bg-gray-50">
+                  <td className="border p-2">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="h-16 w-16 object-cover"
+                    />
+                  </td>
+                  <td className="border p-2">{product.name}</td>
+                  <td className="border p-2 hidden sm:table-cell">
+                    {product.category}
+                  </td>
+                  <td className="border p-2 hidden sm:table-cell">
+                    {product.brand}
+                  </td>
+                  <td className="border p-2 hidden md:table-cell">
+                    {product.stock}
+                  </td>
+                  <td className="border p-2 hidden md:table-cell">
+                    {product.rating}
+                  </td>
+                  <td className="border p-2">${product.price.toFixed(2)}</td>
+                  <td className="border p-2">
+                    <button
+                      onClick={() => handleUpdateProduct(product)}
+                      className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProduct(product._id)}
+                      className="bg-red-500 text-white py-1 px-2 rounded"
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
