@@ -16,7 +16,10 @@ export interface IProduct {
 }
 
 export const FeaturedSection = () => {
-  const { data, error, isLoading } = useGetAllProductsQuery(undefined);
+  // Set polling interval to 30 seconds (30000 ms)
+  const { data, error, isLoading } = useGetAllProductsQuery(undefined, {
+    pollingInterval: 30000,
+  });
 
   if (isLoading) {
     return <div>Loading products...</div>;
@@ -40,7 +43,7 @@ export const FeaturedSection = () => {
   const recentProducts = data?.data
     ?.filter((product: IProduct) => !product.isDeleted) // Filter out deleted products
     .sort((a: IProduct, b: IProduct) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
     )
     .slice(0, 4);
 
