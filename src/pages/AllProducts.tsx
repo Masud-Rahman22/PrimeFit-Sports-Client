@@ -17,7 +17,9 @@ export interface IProduct {
 }
 
 const AllPorducts: React.FC = () => {
-  const { data, error, isLoading } = useGetAllProductsQuery(undefined);
+  const { data, error, isLoading } = useGetAllProductsQuery(undefined,{
+    pollingInterval: 30000
+  });
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const categoryFromQuery = queryParams.get("category");
