@@ -6,7 +6,7 @@ import {
 import { RootState } from '../features/store';
   
   const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/v1',
+    baseUrl: 'https://prime-fit-sports.vercel.app/api/v1',
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
