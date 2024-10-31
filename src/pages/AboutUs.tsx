@@ -1,5 +1,3 @@
-import React from "react";
-
 const AboutUs = () => {
   return (
     <div className="max-w-7xl mx-auto p-8 bg-white rounded-lg mt-10 space-y-12">

@@ -31,7 +31,7 @@ const Checkout = () => {
   const totalPriceWithVat = totalPrice + vatAmount;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleOrderPlacement = (data: CheckoutFormInputs) => {
+  const handleOrderPlacement = (_data: CheckoutFormInputs) => {
     // Placeholder for handling order placement logic
     cartItems.forEach((item) => {
       const newStock = item.stock - 1;
