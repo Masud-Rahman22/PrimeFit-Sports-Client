@@ -17,6 +17,8 @@ export interface IProduct {
 }
 
 const AllPorducts: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const RatingComponent: any = Rating;
   const { data, error, isLoading } = useGetAllProductsQuery(undefined,{
     pollingInterval: 30000
   });
@@ -193,7 +195,7 @@ const AllPorducts: React.FC = () => {
                 <p className="text-gray-500">Brand: {product.brand}</p>
                 <p className="text-gray-500">Category: {product.category}</p>
                 <div className="flex items-center">
-                  <Rating
+                  <RatingComponent
                     initialRating={product?.rating}
                     emptySymbol={
                       <svg

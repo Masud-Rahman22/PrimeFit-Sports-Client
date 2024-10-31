@@ -11,6 +11,8 @@ import { useState, useEffect } from "react";
 
 const SingleProduct = () => {
   const { id } = useParams<{ id: string }>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const RatingComponent: any = Rating;
   const { data, error, isLoading } = useGetSingleProductQuery(id as string);
   const [updateProduct] = useUpdateProductMutation(); // Use mutation to update product
   const dispatch = useAppDispatch();
@@ -117,7 +119,7 @@ const SingleProduct = () => {
             {/* Rating Section */}
             <div className="flex items-center mb-2">
               <span className="text-lg mr-2">Rating: </span>
-              <Rating
+              <RatingComponent
                 emptySymbol={<FaRegStar className="text-yellow-500" />}
                 fullSymbol={<FaStar className="text-yellow-500" />}
                 initialRating={product?.rating}

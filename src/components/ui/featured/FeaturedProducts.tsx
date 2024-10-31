@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import Rating from "react-rating";
 import { IProduct } from "./FeaturedSection";
 import { Link } from "react-router-dom";
@@ -8,6 +8,8 @@ interface FeaturedProductsProps {
 }
 
 export default function FeaturedProducts({ product }: FeaturedProductsProps) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const RatingComponent: any = Rating;
   const {_id,name, description, category, brand, stock, rating, price, image } = product;
   const [userRating, setUserRating] = useState(rating);
 
@@ -46,9 +48,9 @@ export default function FeaturedProducts({ product }: FeaturedProductsProps) {
 
       {/* Rating */}
       <div className="flex items-center justify-center space-x-2">
-        <Rating
+        <RatingComponent
           initialRating={userRating}
-          onChange={(value) => setUserRating(value)}
+          onChange={(value: SetStateAction<number>) => setUserRating(value)}
           emptySymbol={
             <svg
               className="w-7 text-gray-400"
