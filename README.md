@@ -1,102 +1,86 @@
-# PRIMEFIT SPORTS
-# Sporting Goods E-Commerce Website
-
+PRIMEFIT SPORTS
+Sporting Goods E-Commerce Website
 This project builds a comprehensive e-commerce website for a sporting goods business, offering a wide range of equipment and accessories for various sports. It provides a user-friendly shopping experience with both customer and admin functionalities.
 
 Getting Started
 Clone the Repository:
-Bash
-git clone <https://github.com/Masud-Rahman22/PrimeFit-Sports-Client.git>
-Use code with caution.
 
+bash
+Copy code
+git clone https://github.com/Masud-Rahman22/PrimeFit-Sports-Client.git
 Install Dependencies:
-Bash
-cd <PrimeFit-Sports-Client>
-npm install   
 
-Use code with caution.
+bash
+Copy code
+cd primefit-sports-client
+npm install
+Run the Application:
 
+bash
+Copy code
+npm start
 Prerequisites
 Node.js and npm (or yarn)
-A code editor of your choice (e.g., VS Code, WebStorm)
-A basic understanding of React, JavaScript, HTML, and CSS
+A code editor (e.g., VS Code, WebStorm)
+Basic understanding of React, JavaScript, HTML, and CSS
 Project Structure
+plaintext
+Copy code
 src/
-├── components/  // Reusable UI components
-│   ├── Navbar.jsx
-│   ├── Footer.jsx
-│   // ... other components
-├── pages/  // Main application pages
-│   ├── Home.jsx
-│   ├── AboutUs.jsx
-│   ├── Products.jsx
-│   ├── SingleProduct.jsx
-│   ├── Cart.jsx
-│   ├── Checkout.jsx
-│   └── ManageProducts.jsx
-├── utils/  // Utility functions and helpers
-│   ├── api.js  // API calls for backend interaction
-│   // ... other utils
-├── styles/  // Global styles and component styles
-│   ├── global.css
-│   └── components/  // Component-specific styles
-│       ├── Navbar.css
-│       // ... other styles
-└── App.jsx  // Main application entry point
+├── components/         # Reusable UI components
+│   ├── Navbar.jsx      # Navbar component
+│   ├── Footer.jsx      # Footer component
+│   └── ...other components
+├── pages/              # Main application pages
+│   ├── Home.jsx        # Homepage
+│   ├── AboutUs.jsx     # About Us page
+│   ├── Products.jsx    # All Products page
+│   ├── SingleProduct.jsx # Single Product page
+│   ├── Cart.jsx        # Cart page
+│   ├── Checkout.jsx    # Checkout page
+│   └── ManageProducts.jsx # Manage Products (Admin) page
+├── utils/              # Utility functions and helpers
+├── api/                # API calls for backend interaction
+├── styles/             # Global styles and component styles
+└── App.jsx             # Main application entry point
 Features
-User Interface:
-Responsive design for optimal viewing across devices (desktop, tablet, mobile)
-Consistent color scheme and branding reflective of sporting goods
-User-friendly navigation through navbar and footer
-Product Management:
-Manage products (add, update, delete) using RTK Query
-Pre-populated product data for easier editing
-Informative modal/toast messages for delete, update, and create actions
-Real-time UI updates reflecting changes
-Customer Experience:
-Homepage:
-Hero section featuring a carousel with discount information
-Featured products section showcasing the latest offerings
-Category display for filtering products
-Contact us form (optional integration with EmailJS or NodeMailer)
-Product Listing:
-Search functionality for specific products (by name)
-Filter products by various criteria (sport, price, brand, rating)
-Sorting options (price ascending/descending)
-Clear filter button to reset all filters
-Visually appealing and informative product cards
-Single Product:
-Detailed view with name, description, category, brand, stock, rating, image, and price
-Add to cart functionality
-Cart:
-View all added products with quantity options
-Increase/decrease product quantity and remove items
-Total price calculation with 15% VAT
-"Proceed to Checkout" button (conditionally enabled based on product stock)
-Checkout:
-User details collection (name, email, phone, delivery address)
-Payment methods:
-Cash on delivery (redirect to success page and deduct stock)
-Stripe integration (optional, redirects to Stripe checkout and deduct stock on successful payment)
-Bonus Features (Optional):
-RTK Query Polling to display latest products every 30 seconds
-Eye-catching animations on the homepage using a library of your choice
-Detailed README file with project overview and meaningful commits
-Stripe payment integration for seamless checkout
-Pagination for easier browsing in the All Products page
-Backend Integration
-Integrate the backend using your preferred choice (single-page backend or NoSQL backend)
-Ensure proper communication between frontend and backend for data exchange
+User Interface
+Responsive Design: Optimized for desktop, tablet, and mobile devices.
+Consistent Branding: Aligns with the branding of sporting goods.
+Navigation: User-friendly navigation through a Navbar and Footer.
+Product Management (Admin)
+Add, Update, Delete Products: Manage products with RTK Query.
+Pre-filled Product Forms: Easily edit product details.
+UI Updates: Real-time UI updates reflecting changes.
+Customer Experience
+Homepage: Hero section with a discount announcement and featured products.
+Filtering & Sorting: Filter products by category and sort by price, brand, and rating.
+Product Search: Search functionality for specific products.
+Single Product Page: Detailed view of a product with add-to-cart functionality.
+Cart Management: Control product quantity and total price, including tax and shipping.
+Checkout Process
+Order Summary: Provides order details, tax, and shipping costs.
+Payment Methods: Cash on delivery, optional Stripe for online payments.
+Bonus Features
+Polling for Latest Products: Refreshes product list every 30 seconds.
+Animations: Eye-catching homepage animations.
+Pagination: Simplifies navigation on the All Products page.
 Running the Application
-Start the development server:
-Bash
-npm start
-Use code with caution.
+Start Development Server:
 
-Access the website: http://localhost:3000 (default port, may differ)
-Contribution
-Feel free to contribute to this project by:
+bash
+Copy code
+npm run dev
+Access the Website:
+Open your browser and go to http://localhost:3000 (default port may differ).
 
-Forking the repository
-Creating feature branches for your changes
-Submitting pull requests for code review and merging
+Contribution Guidelines
+Fork the Repository: Create a personal copy of the project.
+Create a Feature Branch:
+bash
+Copy code
+git checkout -b feature/your-feature-name
+Submit Pull Requests: Propose changes for code review and merging.
+License
+This project is licensed under the MIT License.
+
