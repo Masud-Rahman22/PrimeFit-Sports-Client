@@ -3,6 +3,7 @@ import Rating from "react-rating";
 import { IProduct } from "./FeaturedSection";
 import { Link } from "react-router-dom";
 
+
 interface FeaturedProductsProps {
   product: IProduct;
 }

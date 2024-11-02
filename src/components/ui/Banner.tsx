@@ -1,14 +1,16 @@
 import React from 'react';
 import { Carousel } from 'antd';
-import './banner.css'; 
+import './Banner.css'; 
+import img1 from '../../assets/images/banner/banner1.png'
+import img2 from '../../assets/images/banner/banner2.png'
 
 const Banner: React.FC = () => (
   <Carousel autoplay className='carousel'>
     <div>
-      <img src="/src/assets/images/banner/banner1.png" alt="" className="banner-image" />
+      <img src={img1} alt="" className="banner-image" />
     </div>
     <div>
-      <img src="/src/assets/images/banner/banner2.png" alt="" className="banner-image" />
+      <img src={img2} alt="" className="banner-image" />
     </div>
   </Carousel>
 );

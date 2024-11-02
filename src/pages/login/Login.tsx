@@ -22,7 +22,6 @@ const Login = ({setSignUp,signUp}:SignUpProps) => {
           console.log(data)
           const { email, password } = data;
           const response = await loginMutation({ email, password }).unwrap();
-          console.log(response)
           dispatch(setUser({ user: response.data, token: response.token }));
           reset(); // Clear form after submission
           navigate(from, { replace: true });

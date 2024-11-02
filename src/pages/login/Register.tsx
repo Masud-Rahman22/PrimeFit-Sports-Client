@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useSignUpMutation } from "../../redux/features/auth/authApi";
 import { setUser } from "../../redux/features/auth/authSlice";
 import Login from "./Login";
+import Swal from "sweetalert2";
 
 export type TFormInputs = {
   name?: string;
@@ -29,9 +30,14 @@ export default function Register() {
       console.log(data)
       const { name, email, password, picture } = data;
       const response = await signUpMutation({ name, email, password, picture }).unwrap();
-      console.log(response)
       dispatch(setUser({ user: response.user, token: response.token }));
       reset(); // Clear form after submission
+      Swal.fire({
+        icon: "success",
+        title: "you are registered !!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
     } catch (error) {
       console.error("Error signing up:", error);
     }

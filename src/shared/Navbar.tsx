@@ -14,6 +14,7 @@ import "./Navbar.css";
 import { useSelector } from "react-redux";
 import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
 import { useAppDispatch } from "../redux/features/hooks";
+import logo from '../assets/images/PRIME__2_-removebg-preview.png'
 
 function Navbar() {
   const currentUser = useSelector(selectCurrentUser);
@@ -178,7 +179,7 @@ function Navbar() {
             }}
           >
             <img
-              src="/src/assets/images/PRIME__2_-removebg-preview.png"
+              src={logo}
               alt="Logo"
               className="logo"
               style={{

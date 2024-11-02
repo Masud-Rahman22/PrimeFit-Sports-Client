@@ -6,12 +6,13 @@ import { FaInstagramSquare } from "react-icons/fa";
 import { FaPinterest } from "react-icons/fa";
 import './footer.css'
 import { NavLink } from "react-router-dom";
+import footerLogo from '../assets/images/PRIME__2_-removebg-preview.png'
 const Footer = () => {
     return (
         <div className='footer'>
             <div className='row'>
                 <div className='col footer img'>
-                   <img src="/src/assets/images/PRIME__2_-removebg-preview.png" alt="" />
+                   <img src={footerLogo}alt="footer-logo" />
                 </div>
                 <div className='col'>
                     <h3 className='text-lg'>Office</h3>

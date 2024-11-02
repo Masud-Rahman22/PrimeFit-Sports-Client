@@ -36,7 +36,7 @@ const AllPorducts: React.FC = () => {
   ); // Initialize with category from query
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number>(0);
-  const [maxPrice, setMaxPrice] = useState<number>(1000);
+  const [maxPrice, setMaxPrice] = useState<number>(10000000);
   const [minRating, setMinRating] = useState<number>(0);
 
   useEffect(() => {
@@ -99,7 +99,6 @@ const AllPorducts: React.FC = () => {
 
   if (isLoading) return <div>Loading products...</div>;
   if (error) return <div>Error loading products.</div>;
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Available Products</h1>

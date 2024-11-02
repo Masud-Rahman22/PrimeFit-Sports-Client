@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { useGetAllProductsQuery } from "../../../redux/features/products/ProductsApi";
 import FeaturedProducts from "./FeaturedProducts";
+import AOS from 'aos';
+import 'aos/dist/aos.css'
 
 export interface IProduct {
   _id?: string;
@@ -16,6 +19,9 @@ export interface IProduct {
 }
 
 export const FeaturedSection = () => {
+  useEffect(()=>{
+    AOS.init({duration:500})
+  },[])
   // Set polling interval to 30 seconds (30000 ms)
   const { data, error, isLoading } = useGetAllProductsQuery(undefined, {
     pollingInterval: 30000,
@@ -47,9 +53,11 @@ export const FeaturedSection = () => {
     )
     .slice(0, 4);
 
+   
+
   return (
-    <div className="mt-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div className="mt-16" >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" data-aos="fade-right">
         {recentProducts?.map((product: IProduct) => (
           <FeaturedProducts key={product._id} product={product} />
         ))}
